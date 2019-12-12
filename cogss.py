@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import asyncio
 
 ...
 
@@ -21,9 +22,28 @@ class MyCog(commands.Cog):
                 message.delete()
 
     @commands.command()
-    async def purge(self, ctx, *, content:str):
-        await delete(int(content))
-        await ctx.send(str(content))
+    async def purge(self, ctx, person: discord.User, delete_limit):
+        if "mod" in [y.name.lower() for y in ctx.author.roles]:
+            async for message in ctx.channel.history(limit=int(delete_limit)+1):
+                if message.author == person:
+                    await message.delete()
+        else:
+            msg = await ctx.send("Sorry, you do not have access to this command!")
+            await asyncio.sleep(2)
+            await msg.delete()
+
+    @commands.command()
+    async def nuke(self, ctx, delete_limit=1000000):
+        if "mod" in [y.name.lower() for y in ctx.author.roles]:
+            async for message in ctx.channel.history(limit=int(delete_limit)+1):
+                await message.delete()
+            msg = await ctx.send("Nuked :thumbsup: https://tenor.com/view/explosion-gif-5940694")
+            await asyncio.sleep(2.5)
+            await msg.delete()
+        else:
+            msg = await ctx.send("Sorry, you do not have access to this command!")
+            await asyncio.sleep(2)
+            await msg.delete()
 
     # add an event using commands.Cog.listener() (not bot.event)
     @commands.Cog.listener()

@@ -34,7 +34,7 @@ prefix = '-'
 description = '''A bot to explore the possibilities of programming'''
 bot = commands.Bot(command_prefix=prefix, description=description, pm_help=True)
 
-#bot.remove_command("help")
+bot.remove_command("help")
 
 '''@bot.event
 async def on_ready():
@@ -61,10 +61,10 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game("prefix \"-\""))
 
 
-@bot.event
+'''@bot.event
 async def on_command(ctx):
     if "mod" in [y.name.lower() for y in ctx.author.roles]:
-        print("works")
+        print("works")'''
 
 @bot.command()
 async def ping(ctx):
@@ -109,4 +109,4 @@ async def reload(ctx, cog: str):
     else:
         await ctx.send(f"{ctx.author.mention} this command is only for devs")
 
-bot.run('NjQ2ODM5Mjg4MTg4ODk1MjQ0.XdW-iQ.F3yBqmuSh5juwl3Hb5D8CEET40Q')
+bot.run(token)
