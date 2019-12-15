@@ -17,16 +17,22 @@ class helpcog(commands.Cog):
     # create a command using commands.command (not bot.command)
     @commands.command()
     async def help(self, ctx):
-        embed = discord.Embed(title="Help message", description="commands available for you to use")
+        embed = discord.Embed(title="General commands", description="commands available for everyone to use")
         embed.add_field(name="ping", value="bot replies with 'pong', mostly used to test whether the bot is responsive")
-        embed.add_field(name="echo", value="bot replies with whatever you tell it")
+        embed.add_field(name="echo [message]", value="bot replies with specified message")
         embed.add_field(name="invite", value="bot invite link")
-        if "mod" in [y.name.lower() for y in ctx.author.roles]:
-            embed.add_field(name="purge [user] [amount]",
-                            value="deletes a specific amount of messages from specified user in the channel")
-            embed.add_field(name="nuke [amount: optional]",
-                            value="deletes all messages in the channel unless amount is specified")
         await ctx.author.send(content=None, embed=embed)
+        if "mod" in [y.name.lower() for y in ctx.author.roles]:
+            try:
+                self.bot.unload_extension("cogss")
+                self.bot.load_extension("cogss")
+                embed = discord.Embed(title="Moderation commands", description="commands available for you as a mod to use")
+                embed.add_field(name="purge [user] [amount: optional]", value="deletes all messages from specified user unless amount is specified")
+                embed.add_field(name="nuke [amount: optional]", value="deletes all messages in the channel unless amount is specified")
+                await ctx.author.send(content=None, embed=embed)
+            except discord.ext.commands.ExtensionNotLoaded:
+                embed = discord.Embed(title="Moderation commands", description="sorry this module is not loaded")
+                await ctx.author.send(content=None, embed=embed)
 
     # add an event using commands.Cog.listener() (not bot.event)
     @commands.Cog.listener()
